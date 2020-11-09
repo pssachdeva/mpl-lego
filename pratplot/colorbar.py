@@ -1,3 +1,31 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def scale_values_to_cmap(values, cmap):
+    """Gets the RGBA color values on a colormap for values in an array, scaled
+    to the minimum and maximum values in the array.
+
+    Parameters
+    ----------
+    values : np.ndarray
+        The values that must be scaled to the colormap.
+    cmap : string
+        The matplotlib colormap to use.
+
+    Returns
+    -------
+    colors : np.ndarray, shape (n_values, 4)
+        The RGBA color values corresponding to each value, spanning the entire
+        color map.
+    """
+    min_val = np.min(values)
+    max_val = np.max(values)
+    scaled_values = (values - min_val) / max_val
+    colors = plt.get_cmap(cmap)((255 * scaled_values).astype('int'))
+    return colors
+
+
 def append_cax_to_ax(ax, spacing=0.05, width=0.05, which='x'):
     """Appends a colorbar axes to a provided axis.
 
@@ -21,9 +49,9 @@ def append_cax_to_ax(ax, spacing=0.05, width=0.05, which='x'):
     """
     # Get axis dimensions and figure
     [[x0, y0], [x1, y1]] = ax.get_position().get_points()
-    fig = ax.get_figure()
 
     # Add colorbar axes
+    fig = ax.get_figure()
     if which == 'x':
         cax = fig.add_axes(
             [x1 + spacing * (x1 - x0),
@@ -74,9 +102,9 @@ def append_colorbar_to_axis(
     cax : matplotlib object
         The colorbar axes.
     """
-    fig = ax.get_figure()
-    # Use helper function to construct axes
-    cax = append_cax_to_ax(fig, ax, spacing, width)
+    # Use helper function to construct colorbar axes
+    cax = append_cax_to_ax(ax, spacing, width, which)
     # Create colorbar with mappable
+    fig = ax.get_figure()
     cb = fig.colorbar(mappable, cax=cax, **kwargs)
     return cb, cax
