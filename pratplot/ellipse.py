@@ -4,7 +4,8 @@ import numpy as np
 from matplotlib.patches import Ellipse
 
 
-def plot_cov_ellipse(cov, mu=None, ax=None, **kwargs):
+def plot_cov_ellipse(cov, mu=None, ax=None, scale=1.0, mu_color=None,
+                     **kwargs):
     """Plots a 2-d covariance matrix as an ellipse on a set of axes.
 
     Parameters
@@ -34,11 +35,11 @@ def plot_cov_ellipse(cov, mu=None, ax=None, **kwargs):
     u = np.sqrt(u)
     ellipse = Ellipse(
         xy=mu,
-        width=u[1],
-        height=u[0],
+        width=scale * u[1],
+        height=scale * u[0],
         angle=180. * np.arctan2(v[1, -1], v[0, -1]) / np.pi,
         **kwargs
     )
-    ax.scatter(mu[0], mu[1], color=kwargs.get('fc', None))
+    ax.scatter(mu[0], mu[1], color=mu_color)
     ax.add_patch(ellipse)
     return ax
