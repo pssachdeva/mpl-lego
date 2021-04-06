@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='mpl-lego',
+    name='mpl_lego',
     version='0.0',
     keywords='data visualization',
 
