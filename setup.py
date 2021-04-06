@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='pratplot',
+    name='mpl-lego',
     version='0.0',
-    # What does your project relate to?
     keywords='data visualization',
 
     # You can just specify the packages manually here if your project is
