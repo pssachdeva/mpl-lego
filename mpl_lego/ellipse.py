@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
+import matplotlib.transforms as transforms
 import numpy as np
 
 from matplotlib.patches import Ellipse
 
 
-def plot_cov_ellipse(cov, mu=None, ax=None, scale=1.0, include_mu=True,
+def plot_cov_ellipse(cov, mu=None, ax=None, n_std=2.0, include_mu=True,
                      mu_color=None, **kwargs):
     """Plots a 2-d covariance matrix as an ellipse on a set of axes.
 
@@ -29,17 +30,28 @@ def plot_cov_ellipse(cov, mu=None, ax=None, scale=1.0, include_mu=True,
         _, ax = plt.subplots(1, 1, figsize=(5, 5))
 
     if mu is None:
-        mu = np.array([0., 0.])
+        mu_x = 0.
+        mu_y = 0.
+    else:
+        mu_x, mu_y = mu
 
-    u, v = np.linalg.eigh(cov)
-    u = np.sqrt(u)
+    pearson = cov[0, 1] / np.sqrt(cov[0, 0] * cov[1, 1])
+    ell_radius_x = np.sqrt(1 + pearson)
+    ell_radius_y = np.sqrt(1 - pearson)
+    scale_x = np.sqrt(cov[0, 0]) * n_std
+    scale_y = np.sqrt(cov[1, 1]) * n_std
+    transform = transforms.Affine2D() \
+        .rotate_deg(45) \
+        .scale(scale_x, scale_y) \
+        .translate(mu_x, mu_y)
+
     ellipse = Ellipse(
-        xy=mu,
-        width=scale * u[1],
-        height=scale * u[0],
-        angle=180. * np.arctan2(v[1, -1], v[0, -1]) / np.pi,
+        xy=(0, 0),
+        width=ell_radius_x * 2,
+        height=ell_radius_y * 2,
         **kwargs
-    )
+    ).set_transform(transform + ax.transData)
+
     if include_mu:
         ax.scatter(mu[0], mu[1], color=mu_color)
     ax.add_patch(ellipse)
