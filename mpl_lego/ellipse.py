@@ -49,9 +49,8 @@ def plot_cov_ellipse(cov, mu=None, ax=None, n_std=2.0, include_mu=True,
         xy=(0, 0),
         width=ell_radius_x * 2,
         height=ell_radius_y * 2,
-        **kwargs
-    ).set_transform(transform + ax.transData)
-
+        **kwargs)
+    ellipse.set_transform(transform + ax.transData)
     if include_mu:
         ax.scatter(mu[0], mu[1], color=mu_color)
     ax.add_patch(ellipse)
