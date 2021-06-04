@@ -1,11 +1,13 @@
-from . import colorbar
-from . import colors
-from . import ellipse
-from . import scatter
-from . import style
+from . import (colorbar,
+               colors,
+               ellipse,
+               labels,
+               scatter,
+               style)
 
 __all__ = ["colorbar",
            "colors",
            "ellipse",
+           "labels",
            "scatter",
            "style"]
