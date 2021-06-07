@@ -64,6 +64,8 @@ def apply_subplot_labels(
     """
     if not isinstance(axes, (list, np.ndarray)):
         axes = [axes]
+    elif isinstance(axes, np.ndarray) and axes.ndim > 1:
+        axes = axes.ravel()
     n_axes = len(axes)
 
     # Create and bold labels, if necessary
