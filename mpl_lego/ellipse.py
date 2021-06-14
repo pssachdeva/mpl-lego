@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib.patches import Ellipse
 
 
-def plot_cov_ellipse(cov, mu=None, ax=None, n_std=2.0, include_mu=True,
+def plot_cov_ellipse(cov, mu=None, ax=None, n_std=2.0, include_mu=False,
                      mu_color=None, **kwargs):
     """Plots a 2-d covariance matrix as an ellipse on a set of axes.
 
