@@ -5,7 +5,8 @@ from . import (colorbar,
                scatter,
                style)
 
-__all__ = ["colorbar",
+__all__ = ["axes",
+           "colorbar",
            "colors",
            "ellipse",
            "labels",
