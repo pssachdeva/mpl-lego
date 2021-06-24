@@ -87,3 +87,101 @@ def apply_subplot_labels(
                 transform=ax.transAxes,
                 **kwargs)
     return axes
+
+
+def add_significance_label(
+    ax, bounds, label=None, which='top', spacing=0.01, width=0.05,
+    color='black', lw=1, fontsize=20
+):
+    """Adds a significance label to a plot, with optional annotation.
+
+    Parameters
+    ----------
+    ax : matplotlib.axis.Axis
+        The matplotlib axis for which to add the significance marker.
+    bounds : tuple, list, or np.ndarray
+        The bounds for the significance marker, either on the x- or y-axis.
+    label : string, default None
+        The annotation label for the significance marker. If None, no label
+        is added.
+    which : string
+        Either 'top', 'bottom', 'left', or 'right', indicating which spine
+        the significance marker is added to.
+    spacing : float
+        The spacing between the significance marker and axis, in axis
+        coordinates.
+    width : float
+        The width of the signifiance marker "stubs".
+    color : string
+        The color of the signifiance marker.
+    lw : float
+        The linewidth of the significance marker.
+    fontsize : int
+        The size of the label.
+
+    Returns
+    -------
+    ax : list
+        The axis, now labeled.
+    """
+    min_bound = np.min(bounds)
+    max_bound = np.max(bounds)
+
+    if which == "top" or which == "bottom":
+        min_stub = 1 + spacing
+        max_stub = 1 + spacing + width
+    elif which == "left" or which == "right":
+        min_stub = -spacing
+        max_stub = -spacing - width
+
+    if which == 'top' or which == "bottom":
+        stub1_x = [min_bound, min_bound]
+        stub1_y = [min_stub, max_stub]
+        stub2_x = [max_bound, max_bound]
+        stub2_y = [min_stub, max_stub]
+        spine_x = [min_bound, max_bound]
+        spine_y = [max_stub, max_stub]
+        trans = ax.get_xaxis_transform()
+    elif which == "right" or which == "left":
+        stub1_x = [min_stub, max_stub]
+        stub1_y = [max_bound, max_bound]
+        stub2_x = [min_stub, max_stub]
+        stub2_y = [min_bound, min_bound]
+        spine_x = [max_stub, max_stub]
+        spine_y = [min_bound, max_bound]
+        trans = ax.get_yaxis_transform()
+
+    # First stub
+    ax.plot(
+        stub1_x,
+        stub1_y,
+        color=color,
+        lw=lw,
+        transform=trans,
+        clip_on=False)
+    # Second stub
+    ax.plot(
+        stub2_x,
+        stub2_y,
+        color=color,
+        lw=lw,
+        transform=trans,
+        clip_on=False)
+    # Spine
+    ax.plot(
+        spine_x,
+        spine_y,
+        color=color,
+        lw=lw,
+        transform=trans,
+        clip_on=False)
+    if label is not None:
+        ax.annotate(
+            text=label,
+            xy=(np.mean(bounds), max_stub),
+            xycoords=trans,
+            ha='center',
+            va='bottom',
+            fontsize=fontsize,
+            annotation_clip=False)
+    return ax
