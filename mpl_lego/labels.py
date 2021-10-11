@@ -7,6 +7,33 @@ def _bold_text(text):
     return r'\textbf{' + text + r'}'
 
 
+def _strip_text(text):
+    """Strip text helper function."""
+    return text.replace('_', ' ')
+
+
+def fix_labels_for_tex_style(text):
+    """Fixes a string or list of strings for usage in LaTeX style.
+
+    Parameters
+    ----------
+    text : str or list
+        The text, as a single string, or list of strings.
+
+    Returns
+    -------
+    fixed : str or list
+        The fixed text.
+    """
+    if isinstance(text, str):
+        fixed = _strip_text(text)
+    elif isinstance(text, list):
+        fixed = [_strip_text(s) for s in text]
+    else:
+        raise ValueError('Text must be a string or list of strings.')
+    return fixed
+
+
 def bold_text(text):
     """Bolds a string or list of strings in LaTeX fashion.
 
