@@ -4,7 +4,7 @@ import string
 
 def _bold_text(text):
     """Bold text helper function."""
-    return r'\textbf{' + text + r'}'
+    return '\n'.join(['\\textbf{' + line + '}' for line in text.split('\n')])
 
 
 def _strip_text(text):
@@ -203,12 +203,13 @@ def add_significance_label(
         transform=trans,
         clip_on=False)
     if label is not None:
-        ax.annotate(
-            text=label,
-            xy=(np.mean(bounds), max_stub),
-            xycoords=trans,
+        ax.text(
+            x=np.mean(bounds),
+            y=max_stub,
+            s=label,
+            transform=trans,
             ha='center',
             va='bottom',
             fontsize=fontsize,
-            annotation_clip=False)
+            clip_on=False)
     return ax
