@@ -51,11 +51,44 @@ def bold_text(text):
     """
     if isinstance(text, str):
         bolded = _bold_text(text)
-    elif isinstance(text, list):
+    elif isinstance(text, list) or isinstance(text, np.ndarray):
         bolded = [_bold_text(s) for s in text]
     else:
         raise ValueError('Text must be a string or list of strings.')
     return bolded
+
+
+def bold_axis_ticklabels(ax, which='both'):
+    """Bolds axis ticklabels.
+    
+    Parameters
+    ----------
+    ax : matplotlib.axis.Axis
+        The matplotlib axis for which to apply bolding.
+    which : string
+        The axis to which to bold ticklabels: 'x', 'y', or 'both'.
+
+    Returns
+    -------
+    ax : list
+        The axis, with tick labels now bolded.
+    """
+    if which == 'x' or which == 'both':
+        ticklabels = ax.get_xticklabels()
+        for ii, label in enumerate(ticklabels):
+            text = label.get_text()
+            label.set_text(bold_text(text))
+            ticklabels[ii] = label
+        ax.set_xticklabels(ticklabels)
+
+    if which == 'y' or which == 'both':
+        ticklabels = ax.get_yticklabels()
+        for ii, label in enumerate(ticklabels):
+            text = label.get_text()
+            label.set_text(bold_text(text))
+            ticklabels[ii] = label
+        ax.set_yticklabels(ticklabels)
+    return ax
 
 
 def apply_subplot_labels(
