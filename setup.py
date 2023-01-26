@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='mpl_lego',
-    version='0.0',
+    version='0.0.1',
     keywords='data visualization',
 
     # You can just specify the packages manually here if your project is

@@ -1,5 +1,9 @@
 import numpy as np
 import string
+import warnings
+
+
+from .style import check_latex_style_on
 
 
 def _bold_text(text):
@@ -49,6 +53,12 @@ def bold_text(text):
     bolded : str or list
         The bolded text.
     """
+    if not check_latex_style_on():
+        warnings.warn("LaTeX style is not turned on. " +
+                      "Use use_latex_style() to turn LaTeX style on before bolding text.",
+                      RuntimeWarning)
+        return text
+
     if isinstance(text, str):
         bolded = _bold_text(text)
     elif isinstance(text, list) or isinstance(text, np.ndarray):
