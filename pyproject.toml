@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mpl_lego"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     { name="Pratik Sachdeva", email="pratik.sachdeva@berkeley.edu"},
 ]
