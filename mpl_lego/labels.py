@@ -256,3 +256,66 @@ def add_significance_label(
             fontsize=fontsize,
             clip_on=False)
     return ax
+
+
+def add_significance_bracket_inplot(
+    ax, x1, x2, y, h=None, label=None,
+    direction="up",
+    label_position="auto",
+    text_offset=None,
+    color="black", lw=1, fontsize=12, zorder=None, clip_on=True
+):
+    """
+    Draw a significance bracket fully inside the axes (data coords),
+    with optional flip and label placement.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+    x1, x2 : float
+        Data x-positions to span with the bracket.
+    y : float
+        Base y-position where the stubs start.
+    h : float, optional
+        Stub height in data units (default: 2% of y-range).
+    direction : {"up","down"}
+        Which way the bracket points from y (affects stub direction).
+    label_position : {"auto","above","below"}
+        Where to place the label relative to the bracket spine.
+        - "auto": above if direction=="up", below if "down".
+    text_offset : float, optional
+        Gap between label and spine (data units; default: 1% of y-range).
+    """
+    y0, y1 = ax.get_ylim()
+    yr = (y1 - y0) if y1 >= y0 else (y0 - y1)  # robust if axes inverted
+    if h is None:
+        h = 0.02 * yr
+    if text_offset is None:
+        text_offset = 0.01 * yr
+
+    # Determine spine y based on direction
+    if direction.lower() == "down":
+        spine_y = y - h
+        default_label_pos = "below"
+        stub_y0, stub_y1 = y, spine_y
+    else:  # "up"
+        spine_y = y + h
+        default_label_pos = "above"
+        stub_y0, stub_y1 = y, spine_y
+
+    # Draw bracket
+    ax.plot([x1, x1], [stub_y0, stub_y1], color=color, lw=lw, zorder=zorder, clip_on=clip_on)
+    ax.plot([x2, x2], [stub_y0, stub_y1], color=color, lw=lw, zorder=zorder, clip_on=clip_on)
+    ax.plot([x1, x2], [spine_y, spine_y], color=color, lw=lw, zorder=zorder, clip_on=clip_on)
+
+    # Label
+    if label is not None:
+        if label_position == "auto":
+            label_position = default_label_pos
+        ty = spine_y + (text_offset if label_position == "above" else -text_offset)
+        ax.text(
+            (x1 + x2) / 2.0, ty, label,
+            ha="center", va=("bottom" if label_position == "above" else "top"),
+            fontsize=fontsize, color=color, zorder=zorder, clip_on=clip_on
+        )
+    return ax
