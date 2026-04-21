@@ -3,6 +3,7 @@ from . import (axes,
                colors,
                ellipse,
                labels,
+               legend,
                scatter,
                style)
 
@@ -11,5 +12,6 @@ __all__ = ["axes",
            "colors",
            "ellipse",
            "labels",
+           "legend",
            "scatter",
            "style"]
